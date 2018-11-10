@@ -32,7 +32,10 @@ public class ListKeeper implements LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void trackOnCreate() {
         Log.d(TAG, "trackOnCreate() called");
-        mLoader.updateData();
+        if (mLoader != null){
+            mLoader.updateData();
+        }
+
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

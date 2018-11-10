@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -14,16 +14,27 @@
         <item name="android:windowActionBarOverlay">true</item>
         <!-- other activity and action bar styles here -->
     </style>
+
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
         <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
         <item name="android:subtitleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
         <item name="titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
         <item name="subtitleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
-        <item name="background">@color/colorPrimaryDark</item>
+        <item name="background">@color/colorPrimary</item>
     </style>
+
     <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/titleColor</item>
-        <item name="android:textSize">40sp</item>
+        <item name="android:textSize">30sp</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
