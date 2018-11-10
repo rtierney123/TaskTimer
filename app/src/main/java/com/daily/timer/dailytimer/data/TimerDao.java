@@ -5,10 +5,9 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.Update;
 
-import com.daily.timer.dailytimer.models.Item;
+import com.daily.timer.dailytimer.models.Timer;
 
 import java.util.Date;
 import java.util.List;
@@ -19,24 +18,24 @@ import io.reactivex.Maybe;
 public interface TimerDao extends DatabaseColumns {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    void insertTimer(Item item);
+    void insertTimer(Timer timer);
 
     @Update
-    void updateTimer(Item item);
+    void updateTimer(Timer timer);
 
     @Delete
-    void deleteTimer(Item item);
+    void deleteTimer(Timer timer);
 
 
     @Query("SELECT * FROM times WHERE "+CURRENT_COLUMN +"= 1 AND "+
             DATE_COLUMN+" = :date")
-    Maybe<List<Item>> loadActive(Date date);
+    Maybe<List<Timer>> loadActive(Date date);
 
     @Query("SELECT * FROM times WHERE "+CURRENT_COLUMN+" = 1 AND "+
             "NOT("+DATE_COLUMN+" = :date)")
-    Maybe<List<Item>> loadOld(Date date);
+    Maybe<List<Timer>> loadOld(Date date);
 
     @Query("SELECT * FROM times")
-    Maybe<List<Item>> loadAll();
+    Maybe<List<Timer>> loadAll();
 
 }

@@ -10,5 +10,8 @@ public interface DatabaseColumns {
     public static final String MINUTES_COLUMN = "minutes";
     public static final String SECONDS_COLUMN = "seconds";
 
+    public static final String POINTS_COLUMN = "points";
+
+
 
 }

@@ -12,8 +12,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.daily.timer.dailytimer.R;
+import com.daily.timer.dailytimer.models.Timer;
 import com.daily.timer.dailytimer.presentors.TimerPresentor;
-import com.daily.timer.dailytimer.models.Item;
 import com.daily.timer.dailytimer.models.Time;
 import com.daily.timer.dailytimer.views.BaseList;
 
@@ -24,7 +24,7 @@ public class MultiTypeAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private Context mContext;
-    private ArrayList<Item> mItems;
+    private ArrayList<Timer> mTimers;
     private TimerPresentor mPresentor;
     private BaseList mList;
     private List<IAdapterItem> mAdapters;
@@ -37,7 +37,7 @@ public class MultiTypeAdapter extends BaseAdapter {
         mList = list;
         mInflater = LayoutInflater.from(context);
         mPresentor = presentor;
-        mItems = (ArrayList<Item>)presentor.getItems();
+        mTimers = (ArrayList<Timer>)presentor.getItems();
         mAdapters = adapters;
     }
 
@@ -66,9 +66,9 @@ public class MultiTypeAdapter extends BaseAdapter {
             settings.setFocusable(false);
             settings.setFocusableInTouchMode(false);
 
-            final Item selectedItem = mItems.get(position);
-            textViewName.setText(selectedItem.getTitle() );
-            textViewTime.setText( selectedItem.getTime().toString() );
+            final Timer selectedTimer = mTimers.get(position);
+            textViewName.setText( selectedTimer.getTitle() );
+            textViewTime.setText( selectedTimer.getTime().toString() );
 
             final int itemPosition = position;
             if (mList.getViewState() == BaseList.ViewState.Normal) {
@@ -108,9 +108,9 @@ public class MultiTypeAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     String title = textViewName.getText().toString();
-                    Item newItem = new Item(title, true, mPresentor.getDateToday(), new Time( ));
+                    Timer newTimer = new Timer(title, true, mPresentor.getDateToday(), new Time( ));
                     mList.setViewState( BaseList.ViewState.Normal);
-                    mPresentor.addItem(newItem);
+                    mPresentor.addItem( newTimer );
                 }
             });
         }

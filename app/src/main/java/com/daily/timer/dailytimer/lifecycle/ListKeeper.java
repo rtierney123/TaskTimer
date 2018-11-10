@@ -57,7 +57,10 @@ public class ListKeeper implements LifecycleObserver {
     public void trackOnResume() {
         Log.d(TAG, "trackOnResume() called");
         //mLoader.updateData();
-        mView.updateView();
+        if (mView != null){
+            mView.updateView();
+        }
+
 
     }
 

@@ -1,11 +1,10 @@
 package com.daily.timer.dailytimer.presentors;
 
 import android.util.Log;
-import android.view.View;
 
 import com.daily.timer.dailytimer.data.AppDatabase;
 import com.daily.timer.dailytimer.data.TimerDao;
-import com.daily.timer.dailytimer.models.Item;
+import com.daily.timer.dailytimer.models.Timer;
 import com.daily.timer.dailytimer.models.Time;
 import com.daily.timer.dailytimer.views.BaseView;
 
@@ -28,29 +27,29 @@ public class TimerPresentor {
 
     public BaseView mView;
     public AppDatabase mDatabase;
-    public static final List<Item> mItems = new ArrayList<>();
+    public static final List<Timer> M_TIMERS = new ArrayList<>();
     private TimerDao mDao;
 
     public TimerPresentor(BaseView view, AppDatabase db){
         mView = view;
         mDatabase = db;
-        mDao = mDatabase.daoAccess();
+        mDao = mDatabase.timerDaoAccess();
     }
 
     public void updateData(){
-        mItems.clear();
+        M_TIMERS.clear();
         loadActiveItems();
         loadOldItems();
 
     }
 
-    public void addItem(Item newItem){
-        mItems.add(newItem);
+    public void addItem(Timer newTimer){
+        M_TIMERS.add( newTimer );
         //mDao.insertTimer(newItem);
         Completable.fromAction( new Action() {
             @Override
             public void run() throws Exception {
-                mDatabase.daoAccess().insertTimer( newItem );
+                mDatabase.timerDaoAccess().insertTimer( newTimer );
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {
@@ -73,12 +72,12 @@ public class TimerPresentor {
     }
 
     public void deleteItem(int position){
-        Item item = mItems.remove(position);
+        Timer timer = M_TIMERS.remove(position);
         //mDao.deleteTimer( item );
         Completable.fromAction( new Action() {
             @Override
             public void run() throws Exception {
-                mDatabase.daoAccess().deleteTimer( item );
+                mDatabase.timerDaoAccess().deleteTimer( timer );
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {
@@ -99,13 +98,13 @@ public class TimerPresentor {
         mView.updateView();
     }
 
-    public void updateItem(int position, Item item) {
-        mItems.set(position, item);
+    public void updateItem(int position, Timer timer) {
+        M_TIMERS.set(position, timer );
         //mDao.updateTimer(item);
         Completable.fromAction( new Action() {
             @Override
             public void run() throws Exception {
-                mDatabase.daoAccess().updateTimer( item );
+                mDatabase.timerDaoAccess().updateTimer( timer );
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {
@@ -127,13 +126,13 @@ public class TimerPresentor {
         mView.updateView();
     }
 
-    public List<Item> getItems() {
-        return mItems;
+    public List<Timer> getItems() {
+        return M_TIMERS;
     }
 
-    public Item getItem(int position) {return mItems.get(position);}
+    public Timer getItem(int position) {return M_TIMERS.get(position);}
 
-    public int size(){return mItems.size();}
+    public int size(){return M_TIMERS.size();}
 
     public void close(){
         mDatabase.close();
@@ -152,13 +151,13 @@ public class TimerPresentor {
     }
 
 
-    private Item resetItem(Item item) {
-        item.setCurrent( false );
+    private Timer resetItem(Timer timer) {
+        timer.setCurrent( false );
         //mDao.updateTimer( item );
         Completable.fromAction( new Action() {
             @Override
             public void run() throws Exception {
-                mDatabase.daoAccess().updateTimer( item );
+                mDatabase.timerDaoAccess().updateTimer( timer );
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {
@@ -177,20 +176,20 @@ public class TimerPresentor {
                 Log.e("Database", "Error updating item");
             }
         });
-        Item newItem = new Item( item.getTitle(), true, getDateToday(), new Time() );
-        addItem( newItem );
+        Timer newTimer = new Timer( timer.getTitle(), true, getDateToday(), new Time() );
+        addItem( newTimer );
 
-        return newItem;
+        return newTimer;
     }
 
     private void loadActiveItems(){
-        mDatabase.daoAccess().loadActive(getDateToday()).subscribeOn( Schedulers.newThread()).observeOn( AndroidSchedulers.mainThread())
-                .subscribe( new Consumer<List<Item>>() {
+        mDatabase.timerDaoAccess().loadActive(getDateToday()).subscribeOn( Schedulers.newThread()).observeOn( AndroidSchedulers.mainThread())
+                .subscribe( new Consumer<List<Timer>>() {
                     @Override
-                    public void accept(@io.reactivex.annotations.NonNull List<Item> items) throws Exception {
-                        if (items != null){
-                            for (Item item : items) {
-                                mItems.add(item);
+                    public void accept(@io.reactivex.annotations.NonNull List<Timer> timers) throws Exception {
+                        if (timers != null){
+                            for (Timer timer : timers) {
+                                M_TIMERS.add( timer );
                             }
                         }
                         mView.updateView();
@@ -200,14 +199,14 @@ public class TimerPresentor {
 
 
     private void loadOldItems(){
-        mDatabase.daoAccess().loadOld(getDateToday()).subscribeOn( Schedulers.newThread()).observeOn( AndroidSchedulers.mainThread())
-                .subscribe( new Consumer<List<Item>>() {
+        mDatabase.timerDaoAccess().loadOld(getDateToday()).subscribeOn( Schedulers.newThread()).observeOn( AndroidSchedulers.mainThread())
+                .subscribe( new Consumer<List<Timer>>() {
                     @Override
-                    public void accept(@io.reactivex.annotations.NonNull List<Item> items) throws Exception {
-                        if (items != null){
-                            for (Item item : items){
-                                Item newItem = resetItem( item );
-                                mItems.add(newItem);
+                    public void accept(@io.reactivex.annotations.NonNull List<Timer> timers) throws Exception {
+                        if (timers != null){
+                            for (Timer timer : timers){
+                                Timer newTimer = resetItem( timer );
+                                M_TIMERS.add( newTimer );
                             }
                         }
                         mView.updateView();
@@ -215,14 +214,14 @@ public class TimerPresentor {
                 });
     }
 
-    private void loadAll(List<Item> totalList){
-        mDatabase.daoAccess().loadAll().subscribeOn( Schedulers.newThread()).observeOn( AndroidSchedulers.mainThread())
-                .subscribe( new Consumer<List<Item>>() {
+    private void loadAll(List<Timer> totalList){
+        mDatabase.timerDaoAccess().loadAll().subscribeOn( Schedulers.newThread()).observeOn( AndroidSchedulers.mainThread())
+                .subscribe( new Consumer<List<Timer>>() {
                     @Override
-                    public void accept(@io.reactivex.annotations.NonNull List<Item> items) throws Exception {
-                        if (items != null){
-                            for (Item item : items) {
-                                mItems.add(item);
+                    public void accept(@io.reactivex.annotations.NonNull List<Timer> timers) throws Exception {
+                        if (timers != null){
+                            for (Timer timer : timers) {
+                                M_TIMERS.add( timer );
                             }
                         }
                         mView.updateView();
@@ -230,9 +229,9 @@ public class TimerPresentor {
                 });
     }
 
-    private void addListToList(List<Item> bigList, List<Item> littleList){
-        for(Item item : littleList){
-            bigList.add(item);
+    private void addListToList(List<Timer> bigList, List<Timer> littleList){
+        for(Timer timer : littleList){
+            bigList.add( timer );
         }
     }
 

@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Entity(tableName = "times")
-public class Item implements DatabaseColumns {
+public class Timer implements DatabaseColumns {
     @ColumnInfo(name = ID_COLUMN)
     @NonNull
     @PrimaryKey(autoGenerate = true)
@@ -30,7 +30,7 @@ public class Item implements DatabaseColumns {
     private Time mTime;
 
 
-    public Item(String title, boolean current, Date date, Time time) {
+    public Timer(String title, boolean current, Date date, Time time) {
         mTitle = title;
         mCurrent = current;
         mDate = date;

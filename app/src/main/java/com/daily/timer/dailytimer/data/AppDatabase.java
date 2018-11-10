@@ -10,16 +10,18 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import com.daily.timer.dailytimer.models.DateConverter;
-import com.daily.timer.dailytimer.models.Item;
+import com.daily.timer.dailytimer.models.PointItem;
+import com.daily.timer.dailytimer.models.Timer;
 
-@Database(entities = {Item.class}, version = 3, exportSchema = false)
+@Database(entities = {Timer.class, PointItem.class}, version = 4, exportSchema = false)
 @TypeConverters({DateConverter.class, ListConverter.class})
 public abstract class  AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
     private static final String DATABASE_NAME = "roomtimer.db";
     private static final int DATABASE_VERSION = 8;
-    private static final String TABLE_NAME = "times";
+    private static final String TABLE_NAME1 = "times";
+    private static final String TABLE_NAME2 = "points";
 
     public static AppDatabase getDatabase(Context context) {
         if (INSTANCE == null) {
@@ -31,8 +33,9 @@ public abstract class  AppDatabase extends RoomDatabase {
 
 
 
-    public abstract TimerDao daoAccess();
+    public abstract TimerDao timerDaoAccess();
 
+    public abstract PointDao pointDaoAccess();
 
     @Override
     protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration config) {

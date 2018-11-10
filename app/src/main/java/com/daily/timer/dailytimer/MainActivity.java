@@ -21,7 +21,7 @@ import com.daily.timer.dailytimer.presentors.TimerPresentor;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        TimerListFragment.OnFragmentInteractionListener {
+        TimerListFragment.OnFragmentInteractionListener,  PointListFragment.OnFragmentInteractionListener{
 
 
 
@@ -86,11 +86,16 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.nav_task_timer) {
-            // Handle the camera action
+            fragmentManager.beginTransaction().
+                    replace(R.id.main_frame_layout, new TimerListFragment())
+                    .commit();
         } else if (id == R.id.nav_life_points) {
-
+            fragmentManager.beginTransaction().
+                    replace(R.id.main_frame_layout, new PointListFragment())
+                    .commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById( R.id.drawer_layout );

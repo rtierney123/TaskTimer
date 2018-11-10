@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.daily.timer.dailytimer.data.AppDatabase;
+import com.daily.timer.dailytimer.models.Timer;
 import com.daily.timer.dailytimer.presentors.TimerPresentor;
-import com.daily.timer.dailytimer.models.Item;
 import com.daily.timer.dailytimer.views.BaseView;
 
 public class TimerActivity extends AppCompatActivity implements BaseView{
@@ -21,7 +21,7 @@ public class TimerActivity extends AppCompatActivity implements BaseView{
     //position from the ListView item clicked
     private int mPosition;
     private TimerPresentor mPresentor;
-    private Item mItem;
+    private Timer mTimer;
     private TextView mTimeText;
     //whether to continue the timer or not
     private boolean mResume;
@@ -37,7 +37,7 @@ public class TimerActivity extends AppCompatActivity implements BaseView{
         mPresentor = new TimerPresentor(this, db);
 
         mPosition = intent.getIntExtra( ITEM_POSITION, 0 );
-        mItem = mPresentor.getItems().get(mPosition);
+        mTimer = mPresentor.getItems().get(mPosition);
         mTimeText = findViewById( R.id.timer_time );
         displayItem();
 
@@ -79,9 +79,9 @@ public class TimerActivity extends AppCompatActivity implements BaseView{
                         public void run() {
                             try {
                                 if (mResume) {
-                                    mItem.getTime().addSecond();
-                                    mTimeText.setText( mItem.getTime().toString() );
-                                    mPresentor.updateItem( mPosition, mItem );
+                                    mTimer.getTime().addSecond();
+                                    mTimeText.setText( mTimer.getTime().toString() );
+                                    mPresentor.updateItem( mPosition, mTimer );
                                 }
 
                             }
@@ -106,13 +106,13 @@ public class TimerActivity extends AppCompatActivity implements BaseView{
 
     //shows new mTime value
     private void displayItem() {
-        setTitle( mItem.getTitle() );
-        mTimeText.setText( mItem.getTime().toString() );
+        setTitle( mTimer.getTitle() );
+        mTimeText.setText( mTimer.getTime().toString() );
     }
 
     @Override
     public void updateView() {
-        mTimeText.setText( mItem.getTime().toString() );
+        mTimeText.setText( mTimer.getTime().toString() );
     }
 
 }
